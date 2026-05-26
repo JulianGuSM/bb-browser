@@ -136,9 +136,10 @@ Xvfb (:99) ← Chrome (headed, DISPLAY=:99) ← CDP screencast → bb-viewer →
 
 **为什么不能用 `--headless=new`：** Linux 上 `--headless=new` 跳过整个 X11/Ozone 显示层，导致 WebGL、`navigator.plugins`、屏幕信息等 API 返回异常值。Google 等反自动化系统检测这些底层渲染差异来识别 headless 浏览器。macOS 上 headless 没问题，因为 Chrome 仍链接完整的 Cocoa/CoreGraphics 框架，只是不显示窗口。
 
-**关键环境变量：**
-- `DISPLAY=:99` — Xvfb 虚拟显示
-- `CHROME_HEADED=1` — `chrome.ts` 跳过 `--headless=new` 和 `--disable-gpu`
+Chrome 始终以有头模式启动，不使用 `--headless=new`。macOS 上没有聚焦的用户 session 时 Chrome 自动离屏渲染（无可见窗口），效果等同 headless 但保留完整 GUI API。
+
+**Docker 关键环境变量：**
+- `DISPLAY=:99` — Xvfb 虚拟显示（Dockerfile 已设置）
 
 **Stealth 注入 = 有害：** Google 的反自动化不检测 CDP 本身，而是检测 `Emulation.setUserAgentOverride`、`Page.addScriptToEvaluateOnNewDocument` 等 CDP domain 调用。不注入任何 stealth，用裸 CDP 即可。
 
