@@ -66,7 +66,6 @@ RUN npm install --omit=dev --ignore-scripts --registry=https://registry.npmmirro
 ENV NODE_ENV=production
 ENV BB_BROWSER_HOME=/data
 ENV DISPLAY=:99
-ENV CHROME_HEADED=1
 
 EXPOSE 19824
 

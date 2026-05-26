@@ -351,14 +351,17 @@ export function createChromeManager(): ChromeManager {
 
       mkdirSync(userDataDir, { recursive: true });
 
-      const headed = process.env.CHROME_HEADED === "1";
+      // Always run headed. On macOS Chrome renders off-screen (no visible
+      // window without a focused user session). On Linux Docker, Xvfb
+      // provides the virtual display. Headless mode is intentionally
+      // avoided — it lacks full GUI APIs and gets flagged by anti-bot
+      // systems (Google, etc.).
       const args = [
         `--remote-debugging-port=${port}`,
         `--user-data-dir=${userDataDir}`,
         `--window-size=${windowSize}`,
         "--no-first-run",
         "--disable-default-apps",
-        ...(headed ? [] : ["--headless=new", "--disable-gpu"]),
         "--no-sandbox",
         "about:blank",
       ];
